@@ -24,7 +24,7 @@ LUA_MODULE_DIR =    $(PREFIX)/share/lua/$(LUA_VERSION)
 LUA_BIN_DIR =       $(PREFIX)/bin
 
 CC= gcc
-AR= gcc -o
+AR= gcc
 
 ##### Platform overrides #####
 ##
@@ -100,7 +100,7 @@ all: $(TARGET)
 doc: manual.html performance.html
 
 $(TARGET): $(OBJS)
-	$(AR) $(LDFLAGS) $(CJSON_LDFLAGS) $@ $(OBJS)
+	$(AR) $(LDFLAGS) $(CJSON_LDFLAGS) -o $@ $(OBJS)
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)/$(LUA_CMODULE_DIR)
