@@ -100,7 +100,7 @@ all: $(TARGET)
 doc: manual.html performance.html
 
 $(TARGET): $(OBJS)
-	$(AR) $(LDFLAGS) $(CJSON_LDFLAGS) $@ $(OBJS)
+	$(AR) $@ $(LDFLAGS) $(CJSON_LDFLAGS) $(OBJS)
 
 install: $(TARGET)
 	mkdir -p $(DESTDIR)/$(LUA_CMODULE_DIR)
