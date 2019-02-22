@@ -74,6 +74,7 @@
 #define DEFAULT_DECODE_INVALID_NUMBERS 1
 #define DEFAULT_ENCODE_KEEP_BUFFER 1
 #define DEFAULT_ENCODE_NUMBER_PRECISION 14
+#define DEFAULT_ENCODE_EMPTY_TABLE_AS_ARRAY 0
 
 #ifdef DISABLE_INVALID_NUMBERS
 #undef DEFAULT_DECODE_INVALID_NUMBERS
@@ -132,6 +133,7 @@ typedef struct {
     int encode_invalid_numbers;     /* 2 => Encode as "null" */
     int encode_number_precision;
     int encode_keep_buffer;
+    int encode_empty_table_as_array;
 
     int decode_invalid_numbers;
     int decode_max_depth;
@@ -365,6 +367,12 @@ static int json_cfg_decode_invalid_numbers(lua_State *l)
     return 1;
 }
 
+static int json_cfg_encode_empty_tables_as_array(lua_State *l)
+{
+    json_config_t *cfg = json_arg_init(l, 1);
+    return json_enum_option(l, 1, &cfg->encode_empty_table_as_array, NULL, 1);
+}
+
 static int json_destroy_config(lua_State *l)
 {
     json_config_t *cfg;
@@ -399,6 +407,7 @@ static void json_create_config(lua_State *l)
     cfg->decode_invalid_numbers = DEFAULT_DECODE_INVALID_NUMBERS;
     cfg->encode_keep_buffer = DEFAULT_ENCODE_KEEP_BUFFER;
     cfg->encode_number_precision = DEFAULT_ENCODE_NUMBER_PRECISION;
+    cfg->encode_empty_table_as_array = DEFAULT_ENCODE_EMPTY_TABLE_AS_ARRAY;
 
 #if DEFAULT_ENCODE_KEEP_BUFFER > 0
     strbuf_init(&cfg->encode_buf, 0);
@@ -713,7 +722,7 @@ static void json_append_data(lua_State *l, json_config_t *cfg,
             json_append_array(l, cfg, current_depth, json, len);
         } else {
             len = lua_array_length(l, cfg, json);
-            if (len > 0)
+            if (len > 0 || (cfg->encode_empty_table_as_array && len == 0))
                 json_append_array(l, cfg, current_depth, json, len);
             else
                 json_append_object(l, cfg, current_depth, json);
@@ -1396,6 +1405,7 @@ static int lua_cjson_new(lua_State *l)
         { "encode_keep_buffer", json_cfg_encode_keep_buffer },
         { "encode_invalid_numbers", json_cfg_encode_invalid_numbers },
         { "decode_invalid_numbers", json_cfg_decode_invalid_numbers },
+        { "encode_empty_table_as_array", json_cfg_encode_empty_tables_as_array },
         { "new", lua_cjson_new },
         { NULL, NULL }
     };
