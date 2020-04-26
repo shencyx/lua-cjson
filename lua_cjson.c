@@ -593,7 +593,7 @@ static void json_append_array(lua_State *l, json_config_t *cfg, int current_dept
         else
             comma = 1;
 
-        lua_rawgeti(l, -1, i);
+        lua_geti(l, -1, i);
         json_append_data(l, cfg, current_depth, json);
         lua_pop(l, 1);
     }
