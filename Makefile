@@ -11,8 +11,8 @@
 ##                          multi-threaded application. Requries _pthreads_.
 
 ##### Build defaults #####
-LUA_VERSION =       5.3
-TARGET =            cjson.so
+LUA_VERSION =       5.4
+TARGET =            luaserialize.so
 PREFIX =            /usr/local
 #CFLAGS =            -g -Wall -pedantic -fno-inline
 CFLAGS =            -O3 -Wall -pedantic -DNDEBUG
@@ -57,11 +57,11 @@ AR= gcc -o
 ##### Number conversion configuration #####
 
 ## Use Libc support for number conversion (default)
-FPCONV_OBJS =       fpconv.o
+#FPCONV_OBJS =       fpconv.o
 
 ## Use built in number conversion
-#FPCONV_OBJS =       g_fmt.o dtoa.o
-#CJSON_CFLAGS +=     -DUSE_INTERNAL_FPCONV
+FPCONV_OBJS =       g_fmt.o dtoa.o
+CJSON_CFLAGS +=     -DUSE_INTERNAL_FPCONV
 
 ## Compile built in number conversion for big endian architectures
 #CJSON_CFLAGS +=     -DIEEE_BIG_ENDIAN
@@ -83,7 +83,7 @@ EXECPERM =          755
 ASCIIDOC =          asciidoc
 
 BUILD_CFLAGS =      -I$(LUA_INCLUDE_DIR) $(CJSON_CFLAGS)
-OBJS =              lua_cjson.o strbuf.o $(FPCONV_OBJS)
+OBJS =              luaserialize.o strbuf.o $(FPCONV_OBJS)
 
 .PHONY: all clean install install-extra doc
 
